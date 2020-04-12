@@ -1,0 +1,13 @@
+[package]
+name = "spctra"
+version = "0.1.0"
+authors = ["Alex A. <alex@tsanga.net>"]
+edition = "2018"
+
+[features]
+minecraft = ["mcio"]
+
+[dependencies]
+actix-web = "2.0"
+actix-rt = "1.0"
+mcio = { version = "0.1.2", optional = true }
