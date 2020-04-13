@@ -1,6 +1,6 @@
 {
   "name": "spctra",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "server player count tracker",
   "author": "Alex A. &lt;alex@tsanga.net&gt;",
   "private": true,

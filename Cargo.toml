@@ -10,4 +10,6 @@ minecraft = ["mcio"]
 [dependencies]
 actix-web = "2.0"
 actix-rt = "1.0"
+toml = "0.5.6"
+serde = { version = "1.0", features = ["derive"] }
 mcio = { version = "0.1.2", optional = true }

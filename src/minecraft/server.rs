@@ -2,6 +2,8 @@ use crate::core::server::{ Server, ServerSnapshot };
 
 
 pub struct MinecraftServer {
+    id: String,
+    name: String,
     address: String,
     port: u16,
     icon: String,
@@ -11,8 +13,10 @@ pub struct MinecraftServer {
 }
 
 impl MinecraftServer {
-    pub fn new<A: Into<String>>(address: A, port: u16) -> Self {
+    pub fn new<A: Into<String>>(id: A, name: A, address: A, port: u16) -> Self {
         MinecraftServer {
+            id: id.into(),
+            name: name.into(),
             address: address.into(),
             port: port,
             icon: "".to_owned(),
@@ -27,6 +31,8 @@ impl MinecraftServer {
 }
 
 impl Server for MinecraftServer {
+    fn get_id(&self) -> &str { &self.id }
+    fn get_name(&self) -> &str { &self.name }
     fn get_address(&self) -> &str { &self.address }
     fn get_icon(&self) -> &str { &self.icon }
     fn get_website(&self) -> Option<&String> { self.website.as_ref() }

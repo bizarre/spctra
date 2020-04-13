@@ -1,5 +1,7 @@
 /// Represents a trackable server
 pub trait Server {
+    fn get_id(&self) -> &str;
+    fn get_name(&self) -> &str;
     fn get_address(&self) -> &str;
     fn get_icon(&self) -> &str;
     fn get_website(&self) -> Option<&String>;
