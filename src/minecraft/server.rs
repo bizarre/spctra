@@ -13,8 +13,8 @@ pub struct MinecraftServer {
 }
 
 impl MinecraftServer {
-    pub fn new<A: Into<String>>(id: A, name: A, address: A, port: u16) -> Self {
-        MinecraftServer {
+    pub fn new<A: Into<String>>(id: A, name: A, address: A, port: u16) -> Option<Self> {
+        Some(MinecraftServer {
             id: id.into(),
             name: name.into(),
             address: address.into(),
@@ -23,7 +23,7 @@ impl MinecraftServer {
             motd: "".to_owned(),
             record: 0,
             website: None
-        }
+        })
     }
 
     pub fn get_motd(&self) -> &str { &self.motd }

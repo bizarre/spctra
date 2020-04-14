@@ -2,9 +2,14 @@ use crate::core::server::{ Server, ServerSnapshot };
 
 
 /// Represents a spctra backend
-pub trait Backend<T, S, C> where T : Server, S : ServerSnapshot<T>, C : Config {
-    fn new(config: C) -> Self;
-    fn fetch(server: T) -> Result<S, ()>;
+pub trait Backend {
+    type T: Server;
+    type S: ServerSnapshot<Self::T>;
+    type C: Config;
+
+    fn new(config: Self::C) -> Self;
+    fn fetch(server: Self::T) -> Result<Self::S, ()>;
+    fn get_servers(&self) -> &Vec<Self::T>;
     fn get_services() -> Vec<Box<dyn Service>>;
 }
 
