@@ -1,5 +1,7 @@
+use serde::Serialize;
+
 /// Represents a trackable server
-pub trait Server {
+pub trait Server : Serialize {
     fn get_id(&self) -> &str;
     fn get_name(&self) -> &str;
     fn get_address(&self) -> &str;
@@ -9,7 +11,7 @@ pub trait Server {
 }
 
 /// Represents a snapshot of a server
-pub trait ServerSnapshot<T : Server> {
+pub trait ServerSnapshot<T : Server> : Serialize {
     fn get_count(&self) -> i32;
     fn get_time(&self) -> u64;
 }

@@ -28,6 +28,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+
   ],
   /*
   ** Nuxt.js dev-modules
@@ -43,14 +44,21 @@ export default {
     // Doc: https://github.com/nuxt-community/modules/tree/master/packages/bulma
     '@nuxtjs/bulma',
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy'
   ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    proxy: true
   },
+
+  proxy: { 
+    '/api/': { target: 'http://localhost:1337/', pathRewrite: {'^/api/': ''} }
+  },
+
   /*
   ** Build configuration
   */
@@ -66,6 +74,16 @@ export default {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
+      config.module.rules.push(
+          {
+            test: /\.worker.js$/,
+            loader: 'worker-loader',
+            options: { /* ... */ }
+          },
+          // ...
+      )
+
+      config.output.globalObject = 'this'
     }
   }
 }

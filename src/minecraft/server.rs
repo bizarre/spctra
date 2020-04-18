@@ -1,6 +1,8 @@
 use crate::core::server::{ Server, ServerSnapshot };
+use serde::Serialize;
+use std::clone::Clone;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Clone)]
 pub struct MinecraftServer {
     id: String,
     name: String,
@@ -14,12 +16,16 @@ pub struct MinecraftServer {
 
 impl MinecraftServer {
     pub fn new<A: Into<String>>(id: A, name: A, address: A, port: u16) -> Option<Self> {
+        let address = address.into().to_owned();
+
+        let data = mcio::ping(address.to_owned(), port, 315).unwrap();
+
         Some(MinecraftServer {
             id: id.into(),
             name: name.into(),
-            address: address.into(),
+            address: address,
             port: port,
-            icon: "".to_owned(),
+            icon: data.favicon,
             motd: "".to_owned(),
             record: 0,
             website: None
@@ -39,9 +45,19 @@ impl Server for MinecraftServer {
     fn get_record(&self) -> i32 { self.record }
 }
 
+#[derive(Debug, Serialize)]
 pub struct MinecraftServerSnapshot {
     count: i32,
     time: u64
+}
+
+impl MinecraftServerSnapshot {
+    pub fn new(count: i32) -> Self {
+        MinecraftServerSnapshot {
+            count: count,
+            time: 0
+        }
+    }
 }
 
 impl ServerSnapshot<MinecraftServer> for MinecraftServerSnapshot {

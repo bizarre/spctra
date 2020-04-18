@@ -1,72 +1,52 @@
 <template>
-  <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        spctra
-      </h1>
-      <h2 class="subtitle">
-        server player count tracker
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+  <div id="app" class="section">
+    <distribution-bar />
+    <div class="columns">
+      <sidebar />
     </div>
   </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-
+import Sidebar from '~/components/Sidebar.vue'
+import DistributionBar from '~/components/DistributionBar.vue'
 export default {
   components: {
-    Logo
+    Sidebar, DistributionBar
+  },
+
+  asyncData ({ $axios, route, error, redirect, store }) {
+    return $axios.get('/api/servers').then((response) => {
+      const servers = response.data
+
+      return { servers }
+    }).catch((e) => {
+      error({ statusCode: 404, message: 'Could not load servers.' })
+    })
+  },
+
+  created () {
+    if (process.server) {
+      return
+    }
+
+    this.$store.commit('setServers', this.servers)
   }
 }
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+#app {
+  height: 100vh;
+  padding-top: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-bottom: 0px;
+  /*background: linear-gradient(90deg,#133630 0%, #133236 100%);*/
+  background: black;
 }
 
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+.columns {
+  height: 100%;
 }
 </style>

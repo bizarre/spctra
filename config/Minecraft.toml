@@ -1,11 +1,11 @@
 [[servers]]
 id = "hypixel"
-name = "Hypixel Network"
+name = "Hypixel"
 address = "mc.hypixel.net"
 port = 25565
 
 [[servers]]
-id = "localhost"
-name = "localhost"
-address = "localhost"
-port = 25577
+id = "veltpvp"
+name = "VeltPvP"
+address = "vltnet03.ddns.net"
+port = 25565

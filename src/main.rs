@@ -13,8 +13,30 @@ use std::sync::{ Mutex, Arc };
 use std::thread;
 use std::time;
 
+struct State<B: Backend> {
+    pub backend: Arc<Mutex<B>>
+}
+
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
+    let args = env::args().collect::<Vec<String>>();
+
+    let config_loc = args.get(1)
+        .expect("Configuration file path not provided.");
+    
+    let _contents = fs::read_to_string(config_loc)
+        .expect("Invalid or missing configuration file.");
+
+    if cfg!(feature = "minecraft") {
+        #[cfg(feature = "minecraft")]
+        start_minecraft(_contents).await?;
+    };
+
+    Ok(())
+}
+
 async fn index<T : Backend>(data: web::Data<State<T>>) -> impl Responder {
-    HttpResponse::Ok().body(format!("Servers: {}", data.backend.lock().unwrap().get_servers().len()))
+    web::Json(data.backend.lock().unwrap().get_servers())
 }
 
 fn start_update_loop<B : Backend + std::marker::Send + 'static>(backend_arc: Arc<Mutex<B>>) {
@@ -37,10 +59,6 @@ fn start_update_loop<B : Backend + std::marker::Send + 'static>(backend_arc: Arc
     });
 }
 
-struct State<B: Backend> {
-    pub backend: Arc<Mutex<B>>
-}
-
 #[cfg(feature = "minecraft")]
 async fn start_minecraft(config: String) -> std::io::Result<()> {
     let backend = Arc::new(Mutex::new(minecraft::init(config)));
@@ -54,27 +72,9 @@ async fn start_minecraft(config: String) -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(state.clone())
-            .route("/", web::get().to(index::<minecraft::backend::MinecraftBackend>))
+            .route("/servers", web::get().to(index::<minecraft::backend::MinecraftBackend>))
     })
-    .bind("127.0.0.1:8088")?
+    .bind("127.0.0.1:1337")?
     .run()
     .await
-}
-
-#[actix_rt::main]
-async fn main() -> std::io::Result<()> {
-    let args = env::args().collect::<Vec<String>>();
-
-    let config_loc = args.get(1)
-        .expect("Configuration file path not provided.");
-    
-    let _contents = fs::read_to_string(config_loc)
-        .expect("Invalid or missing configuration file.");
-
-    if cfg!(feature = "minecraft") {
-        #[cfg(feature = "minecraft")]
-        start_minecraft(_contents).await;
-    };
-
-    Ok(())
 }
