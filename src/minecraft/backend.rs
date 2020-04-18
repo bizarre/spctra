@@ -25,7 +25,7 @@ impl Backend for MinecraftBackend {
     type T = MinecraftServer;
     type S = MinecraftServerSnapshot;
     type C = MinecraftConfig;
-    
+
     fn new(config: MinecraftConfig) -> Self {
         MinecraftBackend { 
             servers: config.servers.iter().map(|s| s.to_server()
@@ -33,9 +33,10 @@ impl Backend for MinecraftBackend {
         }
     }
     
-    fn fetch(server: MinecraftServer) -> Result<MinecraftServerSnapshot, ()> {
+    fn fetch(&self, server: &MinecraftServer) -> Result<MinecraftServerSnapshot, ()> {
         let _response = mcio::ping(server.get_address(), server.get_port(), 315);
 
+        println!("pinged {}", server.get_id());
         Err(())
     }
 

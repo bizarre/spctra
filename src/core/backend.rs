@@ -8,7 +8,7 @@ pub trait Backend {
     type C: Config;
 
     fn new(config: Self::C) -> Self;
-    fn fetch(server: Self::T) -> Result<Self::S, ()>;
+    fn fetch(&self, server: &Self::T) -> Result<Self::S, ()>;
     fn get_servers(&self) -> &Vec<Self::T>;
     fn get_services() -> Vec<Box<dyn Service>>;
 }

@@ -7,5 +7,5 @@ port = 25565
 [[servers]]
 id = "localhost"
 name = "localhost"
-address = "mc.hypixel.net"
+address = "localhost"
 port = 25577

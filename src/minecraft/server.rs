@@ -1,6 +1,6 @@
 use crate::core::server::{ Server, ServerSnapshot };
 
-
+#[derive(Debug)]
 pub struct MinecraftServer {
     id: String,
     name: String,
